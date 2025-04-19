@@ -1,0 +1,15 @@
+# Node.js
+**/node_modules/
+**/package-lock.json
+
+# SQLite DB
+backend/data.db
+
+# Vite build output (optional, safe to ignore if building locally)
+dist/
+build/
+
+# OS/Editor files
+.DS_Store
+.vscode/
+.env
