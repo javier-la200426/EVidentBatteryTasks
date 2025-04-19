@@ -11,7 +11,6 @@ A full-stack task tracker app with role-based access control. Built using:
 git clone https://github.com/javier-la200426/EVidentBatteryTasks.git
 cd EVidentBattery
 docker-compose up --build
-
-
+``` 
 Visit the app at http://localhost:5173
 For testing instructions, see frontend/README.md

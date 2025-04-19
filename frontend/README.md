@@ -3,7 +3,6 @@
 
 ## ✅ 2. `EVidentBattery/frontend/README.md`
 
-```md
 # Frontend (React + Vite)
 
 This is the frontend UI for the Role-Based Task Tracker.  
