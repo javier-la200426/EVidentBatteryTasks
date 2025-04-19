@@ -54,3 +54,4 @@ export function UserProvider({ children }) {
 }
 
 export const useUser = () => useContext(UserContext);
+export { UserContext };
