@@ -13,6 +13,7 @@ const TaskList = forwardRef((props, ref) => {
   const [editTaskId, setEditTaskId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [showDone, setShowDone] = useState(false);
 
   const loadTasks = () => {
     const url = new URL("http://localhost:4000/api/tasks");
@@ -81,10 +82,12 @@ const TaskList = forwardRef((props, ref) => {
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
 
-    const reordered = Array.from(tasks);
+    const reordered = Array.from(activeTasks);
     const [moved] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, moved);
-    setTasks(reordered);
+    const updated = [...reordered, ...doneTasks];
+
+    setTasks(updated);
 
     const orderedIds = reordered.map((t) => t.id);
 
@@ -93,10 +96,13 @@ const TaskList = forwardRef((props, ref) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         orderedIds,
-        role: user.role, // ✅ include the user's role here
+        role: user.role,
       }),
     });
   };
+
+  const activeTasks = tasks.filter(t => t.status !== "done");
+  const doneTasks = tasks.filter(t => t.status === "done");
 
   return (
     <div>
@@ -118,6 +124,7 @@ const TaskList = forwardRef((props, ref) => {
         </select>
       </div>
 
+      {/* ✅ Drag-and-drop for non-done tasks */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="taskList">
           {(provided) => (
@@ -126,7 +133,7 @@ const TaskList = forwardRef((props, ref) => {
               ref={provided.innerRef}
               className="space-y-2"
             >
-              {tasks.map((task, index) => (
+              {activeTasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
                   {(provided) => (
                     <li
@@ -199,6 +206,51 @@ const TaskList = forwardRef((props, ref) => {
           )}
         </Droppable>
       </DragDropContext>
+
+      {/* ✅ Done Task Toggle (only if All selected) */}
+      {statusFilter === "" && doneTasks.length > 0 && (
+        <div className="mt-6">
+          <button
+            onClick={() => setShowDone(!showDone)}
+            className="text-sm text-gray-700 underline"
+          >
+            {showDone ? "Hide Done Tasks" : `Show Done Tasks (${doneTasks.length})`}
+          </button>
+
+          {showDone && (
+            <ul className="mt-2 space-y-2">
+              {doneTasks.map((task) => (
+                <li key={task.id} className="border p-4 rounded bg-gray-100">
+                  <div className="font-semibold">{task.title}</div>
+                  <div>{task.description}</div>
+                  <div className="text-sm text-gray-500">
+                    Created by: <strong>{task.creatorName}</strong> at{" "}
+                    {new Date(task.createdAt).toLocaleString()}
+                  </div>
+                  <div>Status: {task.status}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* ✅ If statusFilter is 'done', always show them */}
+      {statusFilter === "done" && doneTasks.length > 0 && (
+        <ul className="mt-6 space-y-2">
+          {doneTasks.map((task) => (
+            <li key={task.id} className="border p-4 rounded bg-gray-100">
+              <div className="font-semibold">{task.title}</div>
+              <div>{task.description}</div>
+              <div className="text-sm text-gray-500">
+                Created by: <strong>{task.creatorName}</strong> at{" "}
+                {new Date(task.createdAt).toLocaleString()}
+              </div>
+              <div>Status: {task.status}</div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 });

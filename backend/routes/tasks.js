@@ -82,9 +82,13 @@ router.put('/:id', (req, res) => {
   const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id);
   if (!task) return res.status(404).json({ error: "Task not found" });
 
-  if (task.createdBy !== userId || task.status !== "pending") {
-    return res.status(403).json({ error: "Not allowed to edit this task" });
+  if (
+    task.createdBy !== userId ||
+    (task.status !== "pending" && task.status !== "done")
+  ) {
+    return res.status(403).json({ error: "Not allowed to delete this task" });
   }
+  
 
   db.prepare(`
     UPDATE tasks SET title = ?, description = ? WHERE id = ?
