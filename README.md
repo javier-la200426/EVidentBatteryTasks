@@ -13,4 +13,5 @@ cd EVidentBattery
 docker-compose up --build
 ``` 
 Visit the app at http://localhost:5173
+
 For testing instructions, see frontend/README.md

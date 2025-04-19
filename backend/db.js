@@ -13,7 +13,17 @@ db.exec(`
   );
 `);
 
-// ✅ Create users table
+// Create task_order table for per-role ordering
+db.exec(`
+  CREATE TABLE IF NOT EXISTS task_order (
+    role TEXT,
+    taskId TEXT,
+    position INTEGER,
+    PRIMARY KEY (role, taskId)
+  );
+`);
+
+// Create users table
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -22,7 +32,7 @@ db.exec(`
   );
 `);
 
-// ✅ Seed users (Alice the submitter, Bob the approver)
+// Seed users
 const users = [
   { id: "1", name: "Alice", role: "submitter" },
   { id: "2", name: "Bob", role: "approver" },

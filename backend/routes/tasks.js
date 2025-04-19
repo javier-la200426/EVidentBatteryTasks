@@ -2,17 +2,21 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-
 router.get('/', (req, res) => {
-  const { createdBy, status } = req.query;
+  const { createdBy, status, role } = req.query;
+
+  if (!role) {
+    return res.status(400).json({ error: "Missing role in query" });
+  }
 
   let query = `
-    SELECT tasks.*, users.name as creatorName
+    SELECT tasks.*, users.name as creatorName, task_order.position
     FROM tasks
     LEFT JOIN users ON tasks.createdBy = users.id
+    LEFT JOIN task_order ON task_order.taskId = tasks.id AND task_order.role = ?
     WHERE 1=1
   `;
-  let params = [];
+  let params = [role];
 
   if (createdBy) {
     query += ' AND createdBy = ?';
@@ -24,25 +28,28 @@ router.get('/', (req, res) => {
     params.push(status);
   }
 
+  query += ' ORDER BY task_order.position ASC';
+
   const tasks = db.prepare(query).all(...params);
   res.json(tasks);
 });
 
 
-
-
 // POST /api/tasks — create a task
 router.post('/', (req, res) => {
   const { id, title, description, createdAt, createdBy } = req.body;
-  console.log("in task/post")
+  console.log("in task/post");
 
   try {
+    // Get the current max position so the new task goes to the end
+    const max = db.prepare("SELECT MAX(position) as max FROM tasks").get().max || 0;
+
     const stmt = db.prepare(`
-      INSERT INTO tasks (id, title, description, status, createdAt, createdBy)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO tasks (id, title, description, status, createdAt, createdBy, position)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
-    stmt.run(id, title, description, 'pending', createdAt, createdBy);
+    stmt.run(id, title, description, 'pending', createdAt, createdBy, max + 1);
 
     res.status(201).json({ message: 'Task added' });
   } catch (err) {
@@ -51,6 +58,7 @@ router.post('/', (req, res) => {
 });
 
 
+// DELETE /api/tasks/:id
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
   const { userId } = req.query;
@@ -66,7 +74,7 @@ router.delete('/:id', (req, res) => {
   res.status(200).json({ message: "Task deleted" });
 });
 
-//edit route
+// PUT /api/tasks/:id — edit task
 router.put('/:id', (req, res) => {
   const { id } = req.params;
   const { title, description, userId } = req.body;
@@ -85,6 +93,7 @@ router.put('/:id', (req, res) => {
   res.status(200).json({ message: "Task updated" });
 });
 
+// PATCH /api/tasks/:id/status — update status
 router.patch('/:id/status', (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -98,6 +107,24 @@ router.patch('/:id/status', (req, res) => {
   res.status(200).json({ message: "Status updated" });
 });
 
+// PATCH /api/tasks/reorder — update positions
+router.patch('/reorder', (req, res) => {
+  const { orderedIds, role } = req.body;
+
+  try {
+    const deleteOld = db.prepare(`DELETE FROM task_order WHERE role = ?`);
+    deleteOld.run(role);
+
+    const insert = db.prepare(`INSERT INTO task_order (role, taskId, position) VALUES (?, ?, ?)`);
+    orderedIds.forEach((id, index) => {
+      insert.run(role, id, index);
+    });
+
+    res.status(200).json({ message: "Order updated for role" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 module.exports = router;
