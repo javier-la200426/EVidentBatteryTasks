@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities';
 
 @import './variables.css';
+@import './intro-animation.css'; /* Add this line to import the animation styles */
 @import './components/Layout.css';
 @import './components/TaskCard.css';
 @import './components/TaskForm.css';

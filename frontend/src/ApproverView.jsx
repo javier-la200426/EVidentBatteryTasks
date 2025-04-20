@@ -10,16 +10,22 @@ export default function ApproverView() {
   const [statusFilter, setStatusFilter] = useState("");
   const [showDone, setShowDone] = useState(false);
 
-  const loadTasks = () => {
-    const url = new URL("http://localhost:4000/api/tasks");
-    if (statusFilter) url.searchParams.append("status", statusFilter);
-    url.searchParams.append("role", user.role);
+ const loadTasks = () => {
+  const url = new URL("http://localhost:4000/api/tasks");
+  if (statusFilter) url.searchParams.append("status", statusFilter);
+  url.searchParams.append("role", user.role);
 
-    fetch(url.toString())
-      .then((res) => res.json())
-      .then(setTasks)
-      .catch((err) => console.error("Failed to load tasks", err));
-  };
+  fetch(url.toString())
+    .then((res) => res.json())
+    .then((data) => {
+      const sorted = [...data].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setTasks(sorted);
+    })
+    .catch((err) => console.error("Failed to load tasks", err));
+};
+
 
   useEffect(() => {
     loadTasks();
