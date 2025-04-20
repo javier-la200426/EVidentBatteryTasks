@@ -123,9 +123,9 @@ const TaskList = forwardRef((props, ref) => {
               ref={provided.innerRef}
               className="task-list"
             >
-              {activeTasks.length === 0 && (
+              {activeTasks.length === 0 && doneTasks.length === 0 && (
                 <div className="py-6 text-center text-gray-500">
-                  No tasks found. Create a new task to get started.
+                  No tasks found.
                 </div>
               )}
               
