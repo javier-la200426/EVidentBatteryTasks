@@ -3,7 +3,7 @@ import ApproverView from '../ApproverView'
 import { UserContext } from '../UserContext'
 import React from 'react'
 
-const mockSubmitter = { id: '1', name: 'Alice', role: 'submitter' }
+const mockSubmitter = { id: '1', name: 'Chenwei Wu', role: 'submitter' }
 
 test('submitter cannot see approve/reject buttons', async () => {
   render(

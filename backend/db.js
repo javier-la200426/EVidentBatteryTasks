@@ -9,7 +9,8 @@ db.exec(`
     description TEXT,
     status TEXT,
     createdAt TEXT,
-    createdBy TEXT
+    createdBy TEXT,
+    position INTEGER DEFAULT 0
   );
 `);
 
@@ -34,8 +35,8 @@ db.exec(`
 
 // Seed users
 const users = [
-  { id: "1", name: "Alice", role: "submitter" },
-  { id: "2", name: "Bob", role: "approver" },
+  { id: "1", name: "Chenwei Wu", role: "submitter" },
+  { id: "2", name: "Jinqiang Ning", role: "approver" },
 ];
 
 const insert = db.prepare("INSERT OR IGNORE INTO users (id, name, role) VALUES (?, ?, ?)");

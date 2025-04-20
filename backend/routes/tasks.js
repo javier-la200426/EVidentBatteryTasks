@@ -39,10 +39,12 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const { id, title, description, createdAt, createdBy } = req.body;
   console.log("in task/post");
+  console.log("🔸 Received task body:", req.body);
 
   try {
     // Get the current max position so the new task goes to the end
     const max = db.prepare("SELECT MAX(position) as max FROM tasks").get().max || 0;
+    console.log("🔹 Current max position:", max);
 
     const stmt = db.prepare(`
       INSERT INTO tasks (id, title, description, status, createdAt, createdBy, position)
@@ -53,6 +55,7 @@ router.post('/', (req, res) => {
 
     res.status(201).json({ message: 'Task added' });
   } catch (err) {
+    console.error("❌ Error in POST /api/tasks:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

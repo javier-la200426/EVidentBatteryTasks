@@ -4,33 +4,32 @@ import {
   Draggable,
 } from "@hello-pangea/dnd";
 import {
-  useEffect,
-  useState,
-  useImperativeHandle,
   forwardRef,
 } from "react";
-import { useUser } from "./UserContext";
 
-const TaskList = forwardRef(({
-  tasks,
-  onStatusChange,
-  onEdit,
-  onDelete,
-  editableId,
-  editTitle,
-  editDescription,
-  onEditTitleChange,
-  onEditDescriptionChange,
-  onEditCancel,
-  onEditSave,
-  onDragEnd,
-  statusFilter,
-  onStatusFilterChange,
-  showDone,
-  onToggleDone,
-  showDoneToggle,
-  renderTask, // ✅ NEW: optional custom rendering logic
-}, ref) => {
+const TaskList = forwardRef((props, ref) => {
+  const {
+    tasks,
+    onEdit,
+    onDelete,
+    editableId,
+    editTitle,
+    editDescription,
+    onEditTitleChange,
+    onEditDescriptionChange,
+    onEditCancel,
+    onEditSave,
+    onDragEnd,
+    statusFilter,
+    onStatusFilterChange,
+    showDone,
+    onToggleDone,
+    showDoneToggle,
+    renderTask,
+  } = props;
+
+  // Now you can safely use `ref` and all the destructured props.
+
   const activeTasks = tasks.filter((t) => t.status !== "done");
   const doneTasks = tasks.filter((t) => t.status === "done");
 

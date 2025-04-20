@@ -4,7 +4,7 @@ import { UserContext } from '../UserContext'
 import React from 'react'
 
 test('TaskForm shows input and submit button', () => {
-  const mockUser = { id: '1', name: 'Alice', role: 'submitter' }
+  const mockUser = { id: '1', name: 'Chenwei Wu', role: 'submitter' }
 
   render(
     <UserContext.Provider value={{ user: mockUser }}>

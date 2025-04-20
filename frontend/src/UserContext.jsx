@@ -3,8 +3,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 const UserContext = createContext();
 
 const mockUsers = [
-  { id: "1", name: "Alice", role: "submitter" },
-  { id: "2", name: "Bob", role: "approver" },
+  { id: "1", name: "Chenwei Wu", role: "submitter" },
+  { id: "2", name: "Jinqiang Ning", role: "approver" },
 ];
 
 function createMockJWT(user) {
