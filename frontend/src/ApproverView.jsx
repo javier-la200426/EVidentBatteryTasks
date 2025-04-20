@@ -55,37 +55,57 @@ export default function ApproverView() {
 
   const renderTask = (task) => (
     <>
-      <div className="font-semibold">{task.title}</div>
-      <div className="text-sm text-gray-500">
-        Created by: <strong>{task.creatorName}</strong> at{" "}
-        {new Date(task.createdAt).toLocaleString()}
+      <div className="task-title">{task.title}</div>
+      <div className="task-description">{task.description}</div>
+      
+      <div className="task-meta">
+        <div className="task-creator">
+          Created by: <span className="task-creator-name">{task.creatorName}</span>
+          <span className="task-date ml-2">
+            {new Date(task.createdAt).toLocaleString()}
+          </span>
+        </div>
       </div>
-      <div>{task.description}</div>
-      <div>Status: <strong>{task.status}</strong></div>
+      
+      <div className="task-status mt-2">
+        <span className={`text-badge text-badge-${task.status}`}>
+          {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+        </span>
+      </div>
 
       {task.status === "pending" && (
-        <div className="mt-2 space-x-2">
+        <div className="task-actions">
           <button
             onClick={() => updateStatus(task.id, "approved")}
-            className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+            className="btn btn-approve"
           >
+            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             Approve
           </button>
           <button
             onClick={() => updateStatus(task.id, "rejected")}
-            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            className="btn btn-reject"
           >
+            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             Reject
           </button>
         </div>
       )}
 
       {task.status === "approved" && (
-        <div className="mt-2">
+        <div className="task-actions">
           <button
             onClick={() => updateStatus(task.id, "done")}
-            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+            className="btn btn-done"
           >
+            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 11l3 3L22 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             Mark as Done
           </button>
         </div>
@@ -94,18 +114,32 @@ export default function ApproverView() {
   );
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl">Welcome, {user.name}!</h2>
+    <div className="page-container fade-in">
+      <div className="user-welcome">
+        <div>
+          <h2>Welcome, {user.name}!</h2>
+          <div className="mt-2">
+            <span className="user-role approver-role">
+              <svg className="inline-block w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 11l3 3L22 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+            </span>
+          </div>
+        </div>
         <button
           onClick={logout}
-          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          className="btn btn-outline"
         >
+          <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M16 17l5-5-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
           Logout
         </button>
       </div>
-
-      <p>Your role is: <strong>{user.role}</strong></p>
 
       <TaskList
         ref={taskListRef}

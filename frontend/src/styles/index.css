@@ -1,0 +1,107 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import './variables.css';
+@import './components/Layout.css';
+@import './components/TaskCard.css';
+@import './components/TaskForm.css';
+@import './components/Buttons.css';
+
+/* Base Styles */
+body {
+  font-family: var(--font-sans);
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-50);
+  line-height: 1.5;
+}
+
+/* Global Styles */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.page-container {
+  padding: var(--space-6);
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.section-title {
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-xl);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--color-gray-200);
+}
+
+.text-badge {
+  display: inline-flex;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.text-badge-pending {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--status-pending);
+}
+
+.text-badge-approved {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--status-approved);
+}
+
+.text-badge-rejected {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--status-rejected);
+}
+
+.text-badge-done {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--status-done);
+}
+
+/* Animation & Transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}

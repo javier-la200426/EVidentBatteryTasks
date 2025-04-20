@@ -98,42 +98,62 @@ export default function SubmitterView() {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl">Welcome, {user.name}!</h2>
+    <div className="page-container fade-in">
+      <div className="user-welcome">
+        <div>
+          <h2>Welcome, {user.name}!</h2>
+          <div className="mt-2">
+            <span className={`user-role ${user.role === "submitter" ? "submitter-role" : ""}`}>
+              <svg className="inline-block w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+            </span>
+          </div>
+        </div>
         <button
           onClick={logout}
-          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          className="btn btn-outline"
         >
+          <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M16 17l5-5-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
           Logout
         </button>
       </div>
 
-      <p>Your role is: <strong>{user.role}</strong></p>
-
-      <TaskForm onTaskCreated={() => loadTasks()} />
-
-      <TaskList
-        ref={taskListRef}
-        tasks={tasks}
-        editableId={editableId}
-        editTitle={editTitle}
-        editDescription={editDescription}
-        statusFilter={statusFilter}
-        showDone={showDone}
-        allowEdit={true}
-        allowDelete={true}
-        showDoneToggle={true}
-        onStatusFilterChange={setStatusFilter}
-        onEdit={startEdit}
-        onDelete={deleteTask}
-        onEditTitleChange={setEditTitle}
-        onEditDescriptionChange={setEditDescription}
-        onEditCancel={cancelEdit}
-        onEditSave={saveEdit}
-        onToggleDone={() => setShowDone((prev) => !prev)}
-        onDragEnd={handleDragEnd}
-      />
+      <div className="dashboard-container">
+        <div>
+          <TaskForm onTaskCreated={() => loadTasks()} />
+        </div>
+        
+        <div>
+          <TaskList
+            ref={taskListRef}
+            tasks={tasks}
+            editableId={editableId}
+            editTitle={editTitle}
+            editDescription={editDescription}
+            statusFilter={statusFilter}
+            showDone={showDone}
+            allowEdit={true}
+            allowDelete={true}
+            showDoneToggle={true}
+            onStatusFilterChange={setStatusFilter}
+            onEdit={startEdit}
+            onDelete={deleteTask}
+            onEditTitleChange={setEditTitle}
+            onEditDescriptionChange={setEditDescription}
+            onEditCancel={cancelEdit}
+            onEditSave={saveEdit}
+            onToggleDone={() => setShowDone((prev) => !prev)}
+            onDragEnd={handleDragEnd}
+          />
+        </div>
+      </div>
     </div>
   );
 }
